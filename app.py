@@ -6,6 +6,11 @@ from lxml import etree, html
 app = Flask(__name__)
 
 
+@app.route('/', methods=['GET'])
+def hello():
+    return 'Hello there'
+
+
 @app.route('/mensa', methods=['GET'])
 def get_mensa_food():
     f = fp.parse('http://www.studentenwerk-berlin.de/speiseplan/rss/hu_nord/tag/kurz/0')
