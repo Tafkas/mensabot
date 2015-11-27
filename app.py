@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 import re
 import feedparser as fp
 from lxml import etree, html
@@ -26,7 +26,12 @@ def get_mensa_food():
     print(r)
     payload = {"text": 'Today at Mensa',
                'attachments': {'text': r}}
-    return json.dumps(payload, ensure_ascii=False)
+
+    resp = Response(response=json.dumps(payload, ensure_ascii=False),
+                    status=200,
+                    mimetype="application/json")
+
+    return resp
 
 
 if __name__ == '__main__':
