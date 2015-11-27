@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import json
+
 from flask import Flask, jsonify
 import re
 import feedparser as fp
@@ -20,9 +23,10 @@ def get_mensa_food():
     r = ''
     for food_item in food_list:
         r += food_item + '<\n>'
+    print(r)
     payload = {"text": 'Today at Mensa',
                'attachments': {'text': r}}
-    return jsonify(payload)
+    return json.dumps(payload, ensure_ascii=False)
 
 
 if __name__ == '__main__':
