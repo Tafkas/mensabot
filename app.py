@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-
 from flask import Flask, jsonify, Response
 import re
 import feedparser as fp
@@ -25,11 +24,10 @@ def get_mensa_food():
         r += food_item + '<\n>'
     print(r)
     payload = {"text": 'Today at Mensa',
-               'attachments': {'text': r}}
+               'attachments': [{'text': r}]}
 
     resp = Response(response=json.dumps(payload, ensure_ascii=False),
-                    status=200,
-                    mimetype="application/json")
+                    status=200, mimetype="application/json")
 
     return resp
 
