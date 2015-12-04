@@ -25,7 +25,8 @@ def get_mensa_food():
                   'text': (re.sub('\d{2,}\w*\d*', '', x[0].text_content().strip())).rstrip() + ' '
                           + x[1].text_content().rstrip()} for x in list(zip(food_items, food_prices))]
 
-    payload = {"text": 'Today at Mensa',
+    payload = {"response_type": "in_channel",
+               "text": 'Today at Mensa',
                'attachments': food_list}
 
     resp = Response(response=json.dumps(payload, ensure_ascii=False),
