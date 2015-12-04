@@ -4,6 +4,7 @@ from flask import Flask, jsonify, Response, request
 import random
 import re
 import feedparser as fp
+from datetime import datetime
 from lxml import etree, html
 
 app = Flask(__name__)
@@ -40,8 +41,13 @@ def get_mensa_food():
                   'text': (re.sub('\d{2,}\w*\d*', '', x[0].text_content().strip())).rstrip() + ' '
                           + x[1].text_content().rstrip()} for x in list(zip(food_items, food_prices))]
 
+    t = 'Today'
+    if datetime.now().hour >= 16:
+        t = 'Tomorrow'
+        if datetime.now().weekday() == 4:
+            t = 'Monday'
     payload = {"response_type": "in_channel",
-               "text": 'Today at Mensa',
+               "text": '{} at Mensa'.format(t),
                'attachments': food_list}
 
     resp = Response(response=json.dumps(payload, ensure_ascii=False),
