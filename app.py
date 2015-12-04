@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify, Response, request
 import re
 import feedparser as fp
 from lxml import etree, html
 
 app = Flask(__name__)
+
+colors = {'rot': 'danger', 'orange': 'warning', 'gruen': 'good'}
 
 
 @app.route('/', methods=['GET'])
@@ -18,13 +20,11 @@ def get_mensa_food():
     f = fp.parse('http://www.studentenwerk-berlin.de/speiseplan/rss/hu_nord/tag/kurz/0')
     tree = html.fromstring(f['entries'][0]['summary'])
     food_items = tree.xpath('//*[contains(concat( " ", @class, " " ), concat( " ", "mensa_day_speise_name", " " ))]')
-    food_list = [re.sub('\d{2,}\w*\d*', '', x.text_content().strip()) for x in food_items]
-    r = ''
-    for food_item in food_list:
-        r += food_item + '<\n>'
-    print(r)
+    food_list = [{'color': colors[x.xpath('./a/@href')[0].split('_')[1]],
+                  'text': (re.sub('\d{2,}\w*\d*', '', x.text_content().strip())).rstrip()} for x in food_items]
+
     payload = {"text": 'Today at Mensa',
-               'attachments': [{'text': r}]}
+               'attachments': food_list}
 
     resp = Response(response=json.dumps(payload, ensure_ascii=False),
                     status=200, mimetype="application/json")
