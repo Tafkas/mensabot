@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from flask import Flask, jsonify, Response, request
+import random
 import re
 import feedparser as fp
 from lxml import etree, html
@@ -13,6 +14,20 @@ colors = {'rot': 'danger', 'orange': 'warning', 'gruen': 'good'}
 @app.route('/', methods=['GET'])
 def hello():
     return 'Hello there'
+
+
+@app.route('/lunch', methods=['GET'])
+def get_lunch_location():
+    loc = {'Mensa': 6, 'Golden Rice': 2, 'the other Chinese place': 1,
+           'La Focaccia': 2, 'Due Fratelli': 2, 'Honigmond': 1}
+
+    payload = {"response_type": "in_channel",
+               "text": "Today\'s choice is {}".format(random.choice([k for k in loc for dummy in range(loc[k])]))
+               }
+
+    resp = Response(response=json.dumps(payload, ensure_ascii=False),
+                    status=200, mimetype="application/json")
+    return resp
 
 
 @app.route('/mensa', methods=['GET'])
